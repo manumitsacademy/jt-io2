@@ -15,10 +15,11 @@
             <span *ngIf="!inletValveStatus">OFF</span>
         </a>&nbsp;
         <a class="btn btn-light btn-sm">Tank Switch<br>
-            <label class="switch" id="motorswitch">
+            <label class="switch" id="motorswitch" *ngIf="motorSwitchFlag">
                 <input type="checkbox" [(ngModel)]="motorSwitch" (change)="motorRestart()">
                 <span class="slider round"></span>
             </label>
+            <div class="spinner-border spinner-border-sm text-primary" *ngIf="!motorSwitchFlag"></div>
         </a>
         <br>
         <br>
@@ -28,7 +29,10 @@
   </div>
   <div class="row" *ngIf="deviceStatusFlag !='true'">
     <div class="jumbotron  shadow p-3 mb-5 bg-white rounded">
-        No Device Connected
+        <button class="btn btn-primary" disabled>
+            <span class="spinner-grow spinner-grow-sm"></span>
+            Loading..
+        </button>
     </div>
   </div> 
  

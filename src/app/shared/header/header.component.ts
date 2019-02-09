@@ -11,6 +11,9 @@ export class HeaderComponent implements OnInit {
   constructor(public as:AuthenticationService) { }
   loginstatus=false;
   ngOnInit() {
+    if(window.localStorage.getItem('token')){
+      this.loginstatus=true;
+    }
     this.as.userStatusEvent$.subscribe((res)=>{     
       this.loginstatus=res.loginstatus;
     });

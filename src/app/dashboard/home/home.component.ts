@@ -21,8 +21,10 @@ export class HomeComponent {
   deviceDataUnsubscriptionFlag;
   stopGettingDataFlag;
   inletValveStatus=false;
+  motorSwitchFlag=false;
   ngOnInit(){
-    this.stopGettingDataFlag=setInterval(this.getDeviceData.bind(this),1000);
+    this.motorSwitchFlag=true;
+    this.stopGettingDataFlag=setInterval(this.getDeviceData.bind(this),4000);
     this.username=window.localStorage.getItem('username');
   }
   getDeviceData(){
@@ -31,12 +33,13 @@ export class HomeComponent {
       this.data=res;
       this.deviceStatusFlag=res[0].deviceStatus;
       if(res[0].deviceStatus==='true'){      
-        this.h=(100-(res[0]['level']/1.65)).toFixed(2);
+        this.h=(100-((res[0]['level']-21)/1.65)).toFixed(2);
         this.t=res[0]['level'];
         this.macid=res[0]['mac']
         this.motorSwitch=res[0]['switch'];
         this.inletValveStatus=res[0]['IVS'];
-        console.log(this.h,this.t)
+        console.log(this.h,this.t)        
+        this.motorSwitchFlag=true;
       }
     });  
   }
@@ -46,12 +49,15 @@ export class HomeComponent {
   humidityAppendText = "%";
   temperatureLabel = "Temperature";
   temperatureAppendText = "C";
+
   motorRestart(){
+    this.motorSwitchFlag=false;
     this.http.get(`http://ec2-52-66-255-20.ap-south-1.compute.amazonaws.com:5002/command/0xDE,0xAD,0xBE,0xEF,0xFE,0xEE/${this.motorSwitch}/gubbalapraveen`)
       .subscribe((res)=>{
         console.log(res);
       });
   }
+
   ngOnDestroy(){
     console.log("DEstro");
     this.deviceDataUnsubscriptionFlag.unsubscribe();
